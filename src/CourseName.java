@@ -3,13 +3,13 @@ public enum CourseName {
     HISTORY("Historia"),
     MATH("Matematik");
 
-    private final String stringValue;
+    private final String string;
 
-    CourseName(String stringValue) {
-        this.stringValue = stringValue;
+    CourseName(String string) {
+        this.string = string;
     }
 
     public String getString() {
-        return stringValue;
+        return string;
     }
 }

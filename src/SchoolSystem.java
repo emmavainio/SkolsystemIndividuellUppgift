@@ -35,7 +35,7 @@ public class SchoolSystem {
         int input = getNumericInput(3);
 
         if (input == Command.COURSE_LIST.getValue()) {
-            selectCourse();
+            printCourses();
         } else if (input == Command.TEACHER_LIST.getValue()) {
             printAllTeachers();
         } else if (input == Command.STUDENT_LIST.getValue()) {
@@ -43,7 +43,7 @@ public class SchoolSystem {
         }
     }
 
-    public void selectCourse() {
+    public void printCourses() {
 
         System.out.println(ANSI_RESET + """
                 ** Kurser **
@@ -71,10 +71,8 @@ public class SchoolSystem {
     public void printCourseInformation(CourseName courseName) {
 
         if (id == Command.ADMIN.getValue()) {
-            System.out.println(ANSI_RESET + "** " + courseName + " **\n");
-            System.out.println(ANSI_RESET + "Lärare: ");
-            System.out.println(DAO.getCourseTeacher(courseName));
-            System.out.println(ANSI_RESET + "\nElever: ");
+            System.out.println(ANSI_RESET + "** " + courseName + " **\nLärare: " + DAO.getCourseTeacher(courseName) +
+            ANSI_RESET + "\nElever: ");
             if (!DAO.getEnrollmentSet().isEmpty()) {
                 for (Enrollment enrollment : DAO.getEnrollmentSet()) {
                     if (enrollment.getCourse().equals(courseName)) {
@@ -148,7 +146,7 @@ public class SchoolSystem {
             printCourseInformation(courseName);
 
         } else if (input == Command.BACK_OPTION.getValue()) {
-            selectCourse();
+            printCourses();
         }
     }
 
