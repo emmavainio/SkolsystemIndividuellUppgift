@@ -2,17 +2,11 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class SchoolSystem {
-    private final DataAccessObject DAO;
+    private final DataAccessObject DAO = new DataAccessObject();
     private Scanner userInput = new Scanner(System.in);
     private int id;
 
     public SchoolSystem() {
-
-        DAO = new DataAccessObject();
-
-        DAO.addCourse("ENGLISH");
-        DAO.addCourse("HISTORY");
-        DAO.addCourse("MATH");
 
         System.out.println(ANSI_GREEN + "Välkommen till skolsystemet! Skriv en siffra för att gå vidare:\n\n" +
                 ANSI_RESET + "\"1\" - Skoladministratör.\n\"2\" - Elev.\n\"0\" - Avsluta.");
@@ -65,25 +59,27 @@ public class SchoolSystem {
         int input = getNumericInput(3);
 
         if (input == Command.ENGLISH.getValue())
-            printCourseInformation("Engelska");
+            printCourseInformation(CourseName.ENGLISH);
         else if (input == Command.HISTORY.getValue())
-            printCourseInformation("Historia");
+            printCourseInformation(CourseName.HISTORY);
         else if (input == Command.MATH.getValue())
-            printCourseInformation("Matematik");
+            printCourseInformation(CourseName.MATH);
         else if (input == Command.BACK_OPTION.getValue())
             printTerminal();
     }
 
-    public void printCourseInformation(String courseName) {
+    public void printCourseInformation(CourseName courseName) {
 
         if (id == Command.ADMIN.getValue()) {
             System.out.println(ANSI_RESET + "** " + courseName + " **\n");
             System.out.println(ANSI_RESET + "Lärare: ");
-            System.out.println(DAO.getCourseTeacher(courseName));
+            System.out.println(DAO.getCourseTeacher(courseName.getString()));
             System.out.println(ANSI_RESET + "\nElever: ");
-            if (!DAO.getStudents(courseName).isEmpty()) {
-                for (String student : DAO.getStudents(courseName)) {
-                    System.out.println(student);
+            if (!DAO.getEnrollmentSet().isEmpty()) {
+                for (Enrollment enrollment : DAO.getEnrollmentSet()) {
+                    if (enrollment.getCourse().equalsIgnoreCase(courseName.getString())) {
+                        System.out.println(enrollment.getStudent());
+                    }
                 }
             } else
                 System.out.println(ANSI_RED + "För tillfället läser inte några elever " + courseName + ".\n");
@@ -110,7 +106,7 @@ public class SchoolSystem {
         }
     }
 
-    public void loadSelectedCourseAlternatives(String courseName) {
+    public void loadSelectedCourseAlternatives(CourseName courseName) {
 
         int input;
 
@@ -209,21 +205,19 @@ public class SchoolSystem {
 
     public void printStudentInformation(String studentName) {
 
-        Student student = DAO.getStudent(studentName);
-
-        if (studentName.equalsIgnoreCase(student.getName())) {
-            System.out.println("*** Information om " + student.getName() + " ***\n");
-            System.out.println("Namn: " + student.getName() + "\nID: " + student.getPID() + "\n");
-            System.out.println("Aktiva kurser:");
-            for (String course : DAO.getStudentCourses(student.getName())) {
-                System.out.println(course);
+        if (DAO.getStudent(studentName) != null) {
+            System.out.println("*** Information om " + DAO.getStudent(studentName).getName() + " ***\n" +
+            "Namn: " + DAO.getStudent(studentName).getName() + "\nID: " + DAO.getStudent(studentName).getPID() + "\nAktiva kurser:");
+            if (!DAO.getEnrollmentSet().isEmpty()) {
+                for (Enrollment enrollment : DAO.getEnrollmentSet()) {
+                    if (enrollment.getStudent().equals(DAO.getStudent(studentName).getName()))
+                        System.out.println(enrollment.getCourse());
+                }
             }
-            System.out.println();
-
         } else
-            System.out.println("Finns ingen information om denna elev\n");
+            System.out.println("Finns ingen information om denna elev");
 
-        System.out.println("Välj en siffra för att backa eller avsluta\n");
+        System.out.println("\nVälj en siffra för att backa eller avsluta\n");
         System.out.println("\"9\" - Backa\n\"0\" - Avsluta");
 
         int input = getNumericInput(0);
@@ -234,23 +228,21 @@ public class SchoolSystem {
 
     public void printTeacherInformation(String teacherName) {
 
-        Teacher teacher = DAO.getTeacher(teacherName);
-
         if (DAO.getTeacher(teacherName) != null) {
-            System.out.println("*** Information om " + teacher.getName() + " ***\n");
-            System.out.println("Namn: " + teacher.getName() + "\nID: " + teacher.getPID() + "\n");
-
+            System.out.println("*** Information om " + DAO.getTeacher(teacherName).getName() + " ***\n");
+            System.out.println("Namn: " + DAO.getTeacher(teacherName).getName() + "\nID: " +
+                    DAO.getTeacher(teacherName).getPID() + "\n");
             System.out.println("Undervisar i: ");
-            for (String course : DAO.getTeacherCourses(teacher.getName())) {
-                System.out.println(course);
+            if (!DAO.getTeacherList().isEmpty()) {
+                for (Course course : DAO.getCourseList()) {
+                    if (course.getTeacher() == DAO.getTeacher(teacherName))
+                        System.out.println(course.getName());
+                }
             }
-            System.out.println();
-
         } else {
             System.out.println("Finns ingen information om denna lärare\n");
         }
-        System.out.println("Välj en siffra för att backa eller avsluta:\n");
-        System.out.println("\"9\" - Backa\n\"0\" - Avsluta");
+        System.out.println("\nVälj en siffra för att backa eller avsluta:\n\"9\" - Backa\n\"0\" - Avsluta");
 
         int input = getNumericInput(0);
 

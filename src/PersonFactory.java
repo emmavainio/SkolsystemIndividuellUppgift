@@ -1,6 +1,6 @@
 public class PersonFactory {
 
-    public Person createPerson(String personType, String name, String PID) {
+    public static Person createPerson(String personType, String name, String PID) {
 
         return switch (personType.toUpperCase()) {
             case "STUDENT" -> new Student(name,PID);

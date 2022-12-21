@@ -2,7 +2,7 @@
 
 public class Math implements Course {
 
-    String name = CourseName.MATH.getStringValue();
+    String name = CourseName.MATH.getString();
     Teacher teacher;
 
     @Override

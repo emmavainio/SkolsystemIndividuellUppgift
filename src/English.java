@@ -2,7 +2,7 @@
 
 public class English implements Course {
 
-    String name = CourseName.ENGLISH.getStringValue();
+    String name = CourseName.ENGLISH.getString();
     Teacher teacher;
 
     @Override

@@ -1,7 +1,7 @@
 public enum CourseName {
-    ENGLISH("English"),
-    HISTORY("History"),
-    MATH("Math");
+    ENGLISH("Engelska"),
+    HISTORY("Historia"),
+    MATH("Matematik");
 
     private final String stringValue;
 
@@ -9,7 +9,7 @@ public enum CourseName {
         this.stringValue = stringValue;
     }
 
-    public String getStringValue() {
+    public String getString() {
         return stringValue;
     }
 }

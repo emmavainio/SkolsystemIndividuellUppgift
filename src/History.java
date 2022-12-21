@@ -2,7 +2,7 @@
 
 public class History implements Course {
 
-    String name = CourseName.HISTORY.getStringValue();
+    String name = CourseName.HISTORY.getString();
     Teacher teacher;
 
     @Override

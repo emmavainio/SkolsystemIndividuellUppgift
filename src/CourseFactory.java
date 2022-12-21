@@ -1,12 +1,11 @@
-//
-public class CourseFactory {
-    public Course createCourse(String courseType) {
 
-        return switch(courseType.toUpperCase()) {
-            case "ENGLISH" -> new English();
-            case "HISTORY" -> new History();
-            case "MATH" -> new Math();
-            default -> null;
+public class CourseFactory {
+    public Course createCourse(CourseName courseName) {
+
+        return switch(courseName) {
+            case ENGLISH -> new English();
+            case HISTORY -> new History();
+            case MATH -> new Math();
         };
     }
 }
