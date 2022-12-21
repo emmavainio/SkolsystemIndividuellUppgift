@@ -18,7 +18,7 @@ public class DataAccessObject {
         try (BufferedReader buf = new BufferedReader(new FileReader(file))) {
             while ((temp = buf.readLine()) != null) {
                 String[] fileInput = temp.split(",");
-                var person = PersonFactory.createPerson(fileInput[0], fileInput[1], fileInput[2]);
+                var person = PersonFactory.createPerson(fileInput[0], fileInput[1], fileInput[2], fileInput[3]);
                 if (person instanceof Student) {
                     studentList.add((Student) person);
                     studentCourses.put((Student)person, new ArrayList<>());

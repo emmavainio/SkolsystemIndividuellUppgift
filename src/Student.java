@@ -1,13 +1,14 @@
-//
 
 public class Student implements Person {
 
     private String name;
     private String personalID;
+    private String email;
 
-    public Student(String name, String personalID) {
+    public Student(String name, String personalID, String email) {
         this.name = name;
         this.personalID = personalID;
+        this.email = email;
     }
 
     @Override
@@ -18,6 +19,11 @@ public class Student implements Person {
     @Override
     public String getPID() {
         return personalID;
+    }
+
+    @Override
+    public String getEmail() {
+        return email;
     }
 
 }

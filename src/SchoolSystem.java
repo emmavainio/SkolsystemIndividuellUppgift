@@ -203,12 +203,14 @@ public class SchoolSystem {
 
     public void printStudentInformation(String studentName) {
 
-        if (DAO.getStudent(studentName) != null) {
-            System.out.println("*** Information om " + DAO.getStudent(studentName).getName() + " ***\n" +
-            "Namn: " + DAO.getStudent(studentName).getName() + "\nID: " + DAO.getStudent(studentName).getPID() + "\nAktiva kurser:");
+        Student student = DAO.getStudent(studentName);
+
+        if (student != null) {
+            System.out.println("*** Information om " + student.getName() + " ***\n" +
+            "Namn: " + student.getName() + "\nID: " + student.getPID() + "\nEmail: "+ student.getEmail() + "\nAktiva kurser:");
             if (!DAO.getEnrollmentSet().isEmpty()) {
                 for (Enrollment enrollment : DAO.getEnrollmentSet()) {
-                    if (enrollment.getStudent().equals(DAO.getStudent(studentName).getName()))
+                    if (enrollment.getStudent().equals(student.getName()))
                         System.out.println(enrollment.getCourse());
                 }
             }
@@ -229,7 +231,7 @@ public class SchoolSystem {
         if (DAO.getTeacher(teacherName) != null) {
             System.out.println("*** Information om " + DAO.getTeacher(teacherName).getName() + " ***\n");
             System.out.println("Namn: " + DAO.getTeacher(teacherName).getName() + "\nID: " +
-                    DAO.getTeacher(teacherName).getPID() + "\n");
+                    DAO.getTeacher(teacherName).getPID() + "\nEmail: " + DAO.getTeacher(teacherName).getEmail() + "\n");
             System.out.println("Undervisar i: ");
             if (!DAO.getTeacherList().isEmpty()) {
                 for (Course course : DAO.getCourseList()) {
