@@ -51,10 +51,10 @@ public class SchoolSystem {
                 Skriv en siffra för att välja respektive kurs:
                 """);
         for (int i = 0; i < DAO.getCourseList().size(); i++) {
-            System.out.println("\"" + (i + 1) + "\" - " + DAO.getCourseList().get(i).getName());
+            System.out.println("\"" + (i + 1) + "\" - " + DAO.getCourseList().get(i).getName().getString());
         }
-        System.out.println("\"9\" - Backa.");
-        System.out.println("\"0\" - Avsluta.");
+        System.out.println("\"9\" - Backa");
+        System.out.println("\"0\" - Avsluta");
 
         int input = getNumericInput(3);
 
@@ -73,11 +73,11 @@ public class SchoolSystem {
         if (id == Command.ADMIN.getValue()) {
             System.out.println(ANSI_RESET + "** " + courseName + " **\n");
             System.out.println(ANSI_RESET + "Lärare: ");
-            System.out.println(DAO.getCourseTeacher(courseName.getString()));
+            System.out.println(DAO.getCourseTeacher(courseName));
             System.out.println(ANSI_RESET + "\nElever: ");
             if (!DAO.getEnrollmentSet().isEmpty()) {
                 for (Enrollment enrollment : DAO.getEnrollmentSet()) {
-                    if (enrollment.getCourse().equalsIgnoreCase(courseName.getString())) {
+                    if (enrollment.getCourse().equals(courseName)) {
                         System.out.println(enrollment.getStudent());
                     }
                 }

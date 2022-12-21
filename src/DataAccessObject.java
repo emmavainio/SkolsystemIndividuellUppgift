@@ -10,14 +10,15 @@ public class DataAccessObject {
     private ArrayList<Student> studentList = new ArrayList<>();
     private ArrayList<Teacher> teacherList = new ArrayList<>();
     private HashSet<Enrollment> enrollmentSet = new HashSet<>();
-    private CourseFactory courseFactory = new CourseFactory();
+
+    //private CourseFactory courseFactory = new CourseFactory();
 
     public DataAccessObject() {
 
         String temp;
 
         String file = "src/People.txt";
-        try(BufferedReader buf = new BufferedReader(new FileReader(file))) {
+        try (BufferedReader buf = new BufferedReader(new FileReader(file))) {
             while ((temp = buf.readLine()) != null) {
                 String[] fileInput = temp.split(",");
                 var person = PersonFactory.createPerson(fileInput[0], fileInput[1], fileInput[2]);
@@ -29,9 +30,9 @@ public class DataAccessObject {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        courseList.add(courseFactory.createCourse(CourseName.ENGLISH));
-        courseList.add(courseFactory.createCourse(CourseName.HISTORY));
-        courseList.add(courseFactory.createCourse(CourseName.MATH));
+        courseList.add(new Course(CourseName.ENGLISH));
+        courseList.add(new Course(CourseName.HISTORY));
+        courseList.add(new Course(CourseName.MATH));
     }
 
     public Student getStudent(String name) {
@@ -46,7 +47,7 @@ public class DataAccessObject {
 
     public Course getCourse(CourseName courseName) {
         for (Course course : courseList) {
-            if (course.getName().equalsIgnoreCase(courseName.getString())) {
+            if (course.getName().equals(courseName)) {
                 return course;
             }
         }
@@ -66,12 +67,12 @@ public class DataAccessObject {
     public void removeStudentFromCourse(String studentToRemove, CourseName courseName) {
 
         for (Enrollment enrollment : enrollmentSet) {
-            if(enrollment.getCourse().equalsIgnoreCase(courseName.getString())&& enrollment.getStudent().equalsIgnoreCase(studentToRemove)) {
+            if (enrollment.getCourse().equals(courseName) && enrollment.getStudent().equalsIgnoreCase(studentToRemove)) {
                 enrollmentSet.remove(enrollment);
                 System.out.println(ANSI_RED + studentToRemove + " togs bort från kursen: " + courseName + ".\n");
                 break;
             } else {
-                System.out.println(ANSI_RED +studentToRemove + " Läser för tillfället inte kursen: " + courseName);
+                System.out.println(ANSI_RED + studentToRemove + " Läser för tillfället inte kursen: " + courseName);
             }
         }
     }
@@ -100,30 +101,30 @@ public class DataAccessObject {
         if (getStudent(studentToAdd) == null) {
             System.out.println(ANSI_RED + "Hittade ingen elev med namnet " + studentToAdd);
         } else {
-                for (Enrollment enrollment : enrollmentSet) {
-                    if(enrollment.getCourse().equalsIgnoreCase(courseName.getString())&& enrollment.getStudent().equalsIgnoreCase(studentToAdd)) {
-                        System.out.println(ANSI_RED + studentToAdd + " läser redan " + courseName + "!\n");
-                    } else {
-                        enrollmentSet.add(new Enrollment(getStudent(studentToAdd).getName(), getCourse(courseName).getName()));
-                        System.out.println(ANSI_GREEN + studentToAdd + " lades till i kursen " + courseName + "!\n");
-                    }
-                    break;
-                }
-                if (enrollmentSet.isEmpty()) {
+            for (Enrollment enrollment : enrollmentSet) {
+                if (enrollment.getCourse().equals(courseName) && enrollment.getStudent().equalsIgnoreCase(studentToAdd)) {
+                    System.out.println(ANSI_RED + studentToAdd + " läser redan " + courseName + "!\n");
+                } else {
                     enrollmentSet.add(new Enrollment(getStudent(studentToAdd).getName(), getCourse(courseName).getName()));
                     System.out.println(ANSI_GREEN + studentToAdd + " lades till i kursen " + courseName + "!\n");
                 }
+                break;
+            }
+            if (enrollmentSet.isEmpty()) {
+                enrollmentSet.add(new Enrollment(getStudent(studentToAdd).getName(), getCourse(courseName).getName()));
+                System.out.println(ANSI_GREEN + studentToAdd + " lades till i kursen " + courseName + "!\n");
             }
         }
+    }
 
     public void addTeacherToCourse(String teacherToAdd, CourseName courseName) {
 
         teacherToAdd = teacherToAdd.trim();
 
         for (Course course : courseList) {
-            if (Objects.equals(courseName.getString(), course.getName())) {
+            if (course.getName().equals(courseName)) {
                 if (course.getTeacher() != null) {
-                    System.out.println(ANSI_RED + course.getTeacher().getName() + " Undervisar redan " + courseName + "!\n");
+                    System.out.println(ANSI_RED + course.getTeacher().getName() + " undervisar redan " + courseName + "!\n");
                 } else if (course.getTeacher() == null) {
                     for (Teacher teacher : teacherList) {
                         if (teacher.getName().equalsIgnoreCase(teacherToAdd)) {
@@ -140,9 +141,9 @@ public class DataAccessObject {
         }
     }
 
-    public String getCourseTeacher(String courseName) {
+    public String getCourseTeacher(CourseName courseName) {
         for (Course course : courseList) {
-            if (course.getName().equalsIgnoreCase(courseName)) {
+            if (course.getName().equals(courseName)) {
                 try {
                     return course.getTeacher().getName();
                 } catch (NullPointerException e) {

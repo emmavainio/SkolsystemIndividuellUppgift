@@ -1,8 +1,22 @@
 //
 
-public interface Course {
+public class Course {
+    private CourseName courseName;
+    private Teacher teacher;
 
-    String getName();
-    Teacher getTeacher();
-    void setTeacher(Teacher teacher);
+    public Course(CourseName courseName) {
+        this.courseName = courseName;
+    }
+
+    public CourseName getName() {
+        return courseName;
+    }
+
+    public Teacher getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(Teacher teacher) {
+        this.teacher = teacher;
+    }
 }
