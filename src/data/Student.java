@@ -1,7 +1,5 @@
 package data;
 
-import data.Person;
-
 public class Student implements Person {
 
     private String name;

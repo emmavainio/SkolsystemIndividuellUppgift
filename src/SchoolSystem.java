@@ -13,13 +13,26 @@ public class SchoolSystem {
     public SchoolSystem() {
 
         System.out.println(ANSI_GREEN + "Välkommen till skolsystemet! Skriv en siffra för att gå vidare:\n\n" +
-                ANSI_RESET + "\"1\" - Skoladministratör.\n\"2\" - Elev.\n\"0\" - Avsluta.");
+                ANSI_RESET + "1 - Skoladministratör.\n2 - Elev.\n0 - Avsluta.");
 
-        id = getNumericInput(2);
+        while (true) {
+            try {
+                id = userInput.nextInt();
+                if (id >= 0 && id <= 2) {
+                    userInput.nextLine();
+                    break;
+                }
+                System.out.println(ANSI_RED + "Felaktig siffra. Försök igen\n" + ANSI_RESET);
+            } catch (InputMismatchException e) {
+                System.out.println(ANSI_RED + "Endast siffror tillåtna. Försök igen!\n" + ANSI_RESET);
+                userInput.nextLine();
+            }
+        }
+
         if (id != Command.EXIT.getValue()) {
             if (id == Command.ADMIN.getValue())
                 System.out.println("Inloggad som administrarör");
-            else if (id ==Command.STUDENT.getValue())
+            else if (id == Command.STUDENT.getValue())
                 System.out.println("Inloggad som elev");
             printTerminal();
         }
@@ -31,10 +44,10 @@ public class SchoolSystem {
                 Vad vill du göra?
                 Skriv en siffra för att komma till respektive meny:
                                            
-                "1" - Se kurser.
-                "2" - Se Lärarlista.
-                "3" - Se Elevlista.
-                "0" - Avsluta.""");
+                1 - Se kurser.
+                2 - Se Lärarlista.
+                3 - Se Elevlista.
+                0 - Avsluta.""");
 
         int input = getNumericInput(3);
 
@@ -52,13 +65,13 @@ public class SchoolSystem {
         System.out.println(ANSI_RESET + """
                 ** Kurser **
 
-                Skriv en siffra för att välja respektive kurs:
+                Skriv en siffra för att gå vidare:
                 """);
         for (int i = 0; i < cd.getCourseList().size(); i++) {
-            System.out.println("\"" + (i + 1) + "\" - " + cd.getCourseList().get(i).getName().getString());
+            System.out.println((i + 1) + " - " + cd.getCourseList().get(i).getName().getString());
         }
-        System.out.println("\"9\" - Backa");
-        System.out.println("\"0\" - Avsluta");
+        System.out.println("9 - Backa");
+        System.out.println("0 - Avsluta");
 
         int input = getNumericInput(3);
 
@@ -74,38 +87,36 @@ public class SchoolSystem {
 
     public void printCourseInformation(CourseName courseName) {
 
-        if (id == Command.ADMIN.getValue()) {
-            System.out.println(ANSI_RESET + "** " + courseName + " **\nLärare: " + cd.getCourseTeacher(courseName) +
-            ANSI_RESET + "\nElever: ");
-            if (!ed.getEnrollmentSet().isEmpty()) {
-                for (Enrollment enrollment : ed.getEnrollmentSet()) {
-                    if (enrollment.getCourse().equals(courseName)) {
-                        System.out.println(enrollment.getStudent());
-                    }
+        System.out.println(ANSI_RESET + "** " + courseName.getString() + " **\n");
+        System.out.println("Lärare: ");
+        if (cd.getCourseTeacher(cd.getCourse(courseName)) == null)
+            System.out.print(ANSI_RED + "För tillfället undervisar ingen lärare i " + courseName.getString());
+        else
+            System.out.println(cd.getCourseTeacher(cd.getCourse(courseName)).getName());
+        System.out.println(ANSI_RESET + "\nElever: ");
+        if (!ed.getEnrollmentSet().isEmpty()) {
+            for (Enrollment enrollment : ed.getEnrollmentSet()) {
+                if (enrollment.getCourse().getName().equals(courseName)) {
+                    System.out.println(enrollment.getStudent());
                 }
-            } else
-                System.out.println(ANSI_RED + "För tillfället läser inte några elever " + courseName + ".\n");
-            System.out.println();
-
-            if (id == Command.ADMIN.getValue()) {
-                System.out.println(ANSI_RESET + """
-                        Skriv en siffra för att välja välja vad du vill göra:
-                                        
-                        "1" - Ta bort en elev.
-                        "2" - Lägg till en elev.
-                        "3" - Ta bort lärare.
-                        "4" - Lägg till lärare.
-                        "9" - Backa.
-                        "0" - Avsluta.""");
-            } else if (id == Command.STUDENT.getValue()) {
-                System.out.println(ANSI_RESET + """
-                    Skriv en siffra för att välja välja vad du vill göra:
-                                        
-                    "9" - Backa.
-                    "0" - Avsluta.""");
             }
-            loadSelectedCourseAlternatives(courseName);
+        } else
+            System.out.println(ANSI_RED + "För tillfället läser inte några elever " + courseName.getString() + ".");
+
+        System.out.println(ANSI_RESET + "\nSkriv en siffra för att välja välja vad du vill göra:");
+        if (id == Command.ADMIN.getValue()) {
+            System.out.println("""
+                    1 - Ta bort en elev.
+                    2 - Lägg till en elev.
+                    3 - Ta bort lärare.
+                    4 - Lägg till lärare.""");
         }
+        System.out.println(ANSI_RESET + """            
+                9 - Backa.
+                0 - Avsluta.""");
+
+        loadSelectedCourseAlternatives(courseName);
+
     }
 
     public void loadSelectedCourseAlternatives(CourseName courseName) {
@@ -125,7 +136,7 @@ public class SchoolSystem {
             if (pd.getStudent(studentToRemove) == null)
                 System.out.println("Kunde inte hitta en elev med namnet: '" + studentToRemove + "'.");
             else
-                ed.removeStudentFromCourse(studentToRemove, courseName);
+                ed.removeStudentFromCourse(pd.getStudent(studentToRemove), cd.getCourse(courseName));
             printCourseInformation(courseName);
 
         } else if (input == Command.ADD_STUDENT.getValue()) {
@@ -136,7 +147,7 @@ public class SchoolSystem {
             if (pd.getStudent(studentToAdd) == null)
                 System.out.println("Kunde inte hitta en elev med namnet: '" + studentToAdd + "'.");
             else
-                ed.addStudentToCourse(pd.getStudent(studentToAdd), courseName, cd.getCourse(courseName));
+                ed.addStudentToCourse(pd.getStudent(studentToAdd), cd.getCourse(courseName));
             printCourseInformation(courseName);
 
         } else if (input == Command.REMOVE_TEACHER.getValue()) {
@@ -201,7 +212,7 @@ public class SchoolSystem {
 
         System.out.println("** Elevlista **\n");
         System.out.println("Skriv in ett" + ANSI_RED + " namn " + ANSI_RESET + "från listan för att se mer information\n");
-        for (Student student: pd.getStudentList()) {
+        for (Student student : pd.getStudentList()) {
             System.out.println(student.getName());
         }
         if (id == Command.ADMIN.getValue())
@@ -222,8 +233,7 @@ public class SchoolSystem {
             else
                 System.out.println("Felaktig inmatning");
             printAllStudents();
-        }
-        else if (input.equals(Command.EXIT.getString()))
+        } else if (input.equals(Command.EXIT.getString()))
             System.exit(0);
         else
             printStudentInformation(input);
@@ -236,10 +246,10 @@ public class SchoolSystem {
 
         if (student != null) {
             System.out.println("*** Information om " + student.getName() + " ***\n" +
-            "Namn: " + student.getName() + "\nID: " + student.getSSN() + "\nEmail: "+ student.getEmail() + "\nAktiva kurser:");
+                    "Namn: " + student.getName() + "\nID: " + student.getSSN() + "\nEmail: " + student.getEmail() + "\nAktiva kurser:");
             if (!ed.getEnrollmentSet().isEmpty()) {
                 for (Enrollment enrollment : ed.getEnrollmentSet()) {
-                    if (enrollment.getStudent().equals(student.getName()))
+                    if (enrollment.getStudent().equals(student))
                         System.out.println(enrollment.getCourse());
                 }
             }

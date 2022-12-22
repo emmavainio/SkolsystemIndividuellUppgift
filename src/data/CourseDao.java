@@ -49,17 +49,13 @@ public class CourseDao {
             }
         }
     }
-    public String getCourseTeacher(CourseName courseName) {
-        for (Course course : courseList) {
-            if (course.getName().equals(courseName)) {
-                try {
-                    return course.getTeacher().getName();
-                } catch (NullPointerException e) {
-                    return ANSI_RED + "Det är för tillfället ingen lärare som undervisar i kursen " + courseName + ".";
-                }
+    public Teacher getCourseTeacher(Course course) {
+        for (Course c : courseList) {
+            if (c.equals(course)) {
+                return c.getTeacher();
             }
         }
-        return ANSI_RED + "Det är för tillfället ingen lärare som undervisar i kursen " + courseName + ".";
+        return null;
     }
 
     public static final String ANSI_RED = "\u001B[31m";
