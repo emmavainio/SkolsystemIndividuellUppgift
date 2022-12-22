@@ -158,7 +158,7 @@ public class SchoolSystem {
             if (pd.getTeacher(teacherToAdd) == null)
                 System.out.println("Kunde inte hitta en lärare med namnet: '" + teacherToAdd + "'.");
             else
-                cd.addTeacherToCourse(teacherToAdd, courseName, pd.getTeacher(teacherToAdd));
+                cd.addTeacherToCourse(courseName, pd.getTeacher(teacherToAdd));
             printCourseInformation(courseName);
 
         } else if (input == Command.BACK_OPTION.getValue()) {

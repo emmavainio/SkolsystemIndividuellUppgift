@@ -5,15 +5,8 @@ import java.util.HashSet;
 public class EmrollmentDao {
     private HashSet<Enrollment> enrollmentSet = new HashSet<>();
 
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
-
     public HashSet<Enrollment> getEnrollmentSet() {
         return enrollmentSet;
-    }
-
-    public void addEnrollment(Enrollment enrollment) {
-        enrollmentSet.add(enrollment);
     }
 
     public void removeStudentFromCourse(String studentToRemove, CourseName courseName) {
@@ -48,4 +41,6 @@ public class EmrollmentDao {
             }
         }
     }
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
 }

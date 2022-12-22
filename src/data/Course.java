@@ -1,8 +1,5 @@
 package data;
 
-import data.CourseName;
-import data.Teacher;
-
 public class Course {
     private CourseName courseName;
     private Teacher teacher;

@@ -1,13 +1,11 @@
 package data;
 
 import java.util.ArrayList;
-import java.util.Objects;
+import java.util.List;
 
 public class CourseDao {
 
-    private ArrayList<Course> courseList = new ArrayList<>();
-    public static final String ANSI_RED = "\u001B[31m";
-    public static final String ANSI_GREEN = "\u001B[32m";
+    private List<Course> courseList = new ArrayList<>();
 
     public CourseDao() {
         courseList.add(new Course(CourseName.ENGLISH));
@@ -36,7 +34,7 @@ public class CourseDao {
             }
         }
     }
-    public void addTeacherToCourse(String teacherToAdd, CourseName courseName, Teacher teacher) {
+    public void addTeacherToCourse(CourseName courseName, Teacher teacher) {
 
         for (Course course : courseList) {
             if (course.getName().equals(courseName)) {
@@ -64,7 +62,10 @@ public class CourseDao {
         return ANSI_RED + "Det är för tillfället ingen lärare som undervisar i kursen " + courseName + ".";
     }
 
-    public ArrayList<Course> getCourseList() {
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_GREEN = "\u001B[32m";
+
+    public List<Course> getCourseList() {
         return courseList;
     }
 }
