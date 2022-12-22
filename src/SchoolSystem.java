@@ -1,3 +1,5 @@
+import data.*;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -5,6 +7,9 @@ public class SchoolSystem {
     private final DataAccessObject DAO = new DataAccessObject();
     private Scanner userInput = new Scanner(System.in);
     private int id;
+
+    StudentDao SD = new StudentDao();
+    TeacherDao TD = new TeacherDao();
 
     public SchoolSystem() {
 
@@ -207,7 +212,7 @@ public class SchoolSystem {
 
         if (student != null) {
             System.out.println("*** Information om " + student.getName() + " ***\n" +
-            "Namn: " + student.getName() + "\nID: " + student.getPID() + "\nEmail: "+ student.getEmail() + "\nAktiva kurser:");
+            "Namn: " + student.getName() + "\nID: " + student.getSSN() + "\nEmail: "+ student.getEmail() + "\nAktiva kurser:");
             if (!DAO.getEnrollmentSet().isEmpty()) {
                 for (Enrollment enrollment : DAO.getEnrollmentSet()) {
                     if (enrollment.getStudent().equals(student.getName()))
@@ -231,7 +236,7 @@ public class SchoolSystem {
         if (DAO.getTeacher(teacherName) != null) {
             System.out.println("*** Information om " + DAO.getTeacher(teacherName).getName() + " ***\n");
             System.out.println("Namn: " + DAO.getTeacher(teacherName).getName() + "\nID: " +
-                    DAO.getTeacher(teacherName).getPID() + "\nEmail: " + DAO.getTeacher(teacherName).getEmail() + "\n");
+                    DAO.getTeacher(teacherName).getSSN() + "\nEmail: " + DAO.getTeacher(teacherName).getEmail() + "\n");
             System.out.println("Undervisar i: ");
             if (!DAO.getTeacherList().isEmpty()) {
                 for (Course course : DAO.getCourseList()) {

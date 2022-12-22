@@ -1,13 +1,16 @@
+package data;
+
+import data.Person;
 
 public class Student implements Person {
 
     private String name;
-    private String personalID;
+    private String SSN;
     private String email;
 
-    public Student(String name, String personalID, String email) {
+    public Student(String name, String SSN, String email) {
         this.name = name;
-        this.personalID = personalID;
+        this.SSN = SSN;
         this.email = email;
     }
 
@@ -17,8 +20,8 @@ public class Student implements Person {
     }
 
     @Override
-    public String getPID() {
-        return personalID;
+    public String getSSN() {
+        return SSN;
     }
 
     @Override

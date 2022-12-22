@@ -1,3 +1,5 @@
+import data.CourseName;
+import data.Teacher;
 
 public class Course {
     private CourseName courseName;

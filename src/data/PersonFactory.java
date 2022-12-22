@@ -1,4 +1,6 @@
-public class PersonFactory {
+package data;
+
+public abstract class PersonFactory {
 
     public static Person createPerson(String personType, String name, String PID, String email) {
 

@@ -1,6 +1,8 @@
+package data;
+
 public interface Person {
 
     String getName();
-    String getPID();
+    String getSSN();
     String getEmail();
 }

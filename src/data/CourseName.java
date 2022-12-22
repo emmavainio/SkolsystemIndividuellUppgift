@@ -1,6 +1,4 @@
-/*
-
-
+package data;
 
 public enum CourseName {
     ENGLISH("Engelska"),
@@ -17,4 +15,3 @@ public enum CourseName {
         return string;
     }
 }
-*/

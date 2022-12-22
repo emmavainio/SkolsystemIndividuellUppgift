@@ -1,3 +1,9 @@
+import data.Enrollment;
+import data.PersonFactory;
+import data.Student;
+import data.Teacher;
+import data.CourseName;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -8,7 +14,6 @@ public class DataAccessObject {
     private ArrayList<Student> studentList = new ArrayList<>();
     private ArrayList<Teacher> teacherList = new ArrayList<>();
     private HashSet<Enrollment> enrollmentSet = new HashSet<>();
-    private HashMap<Student, List<Course>> studentCourses = new HashMap<>();
 
     public DataAccessObject() {
 
@@ -21,7 +26,6 @@ public class DataAccessObject {
                 var person = PersonFactory.createPerson(fileInput[0], fileInput[1], fileInput[2], fileInput[3]);
                 if (person instanceof Student) {
                     studentList.add((Student) person);
-                    studentCourses.put((Student)person, new ArrayList<>());
                 }
                 else if (person instanceof Teacher)
                     teacherList.add((Teacher) person);
@@ -167,10 +171,6 @@ public class DataAccessObject {
 
     public HashSet<Enrollment> getEnrollmentSet() {
         return enrollmentSet;
-    }
-
-    public HashMap<Student, List<Course>> getStudentCourses() {
-        return studentCourses;
     }
 
     public static final String ANSI_RED = "\u001B[31m";

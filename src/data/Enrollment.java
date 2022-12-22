@@ -1,3 +1,5 @@
+package data;
+
 public class Enrollment {
     private final String STUDENT_NAME;
     private final CourseName COURSE_NAME;
