@@ -12,20 +12,21 @@ public enum Command {
     REMOVE_STUDENT(1, "1"),
     ADD_STUDENT(2, "2"),
     REMOVE_TEACHER(3, "3"),
-    ADD_TEACHER(4, "4");
+    ADD_TEACHER(4, "4"),
+    ADD_NEW_PERSON(1,"1");
 
     private final int value;
-    private final String stringValue;
+    private final String string;
 
-    Command(int value, String stringValue) {
+    Command(int value, String string) {
         this.value = value;
-        this.stringValue = stringValue;
+        this.string = string;
     }
 
     public int getValue() {
         return value;
     }
-    public String getStringValue() {
-        return stringValue;
+    public String getString() {
+        return string;
     }
 }

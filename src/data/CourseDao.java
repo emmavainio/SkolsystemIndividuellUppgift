@@ -23,21 +23,16 @@ public class CourseDao {
         System.err.println("Det finns ingen kurs med namnet: '" + courseName + "'.");
         return null;
     }
-    public void removeTeacherFromCourse(String teacherToRemove, CourseName courseName) {
-
-        teacherToRemove = teacherToRemove.trim();
+    public void removeTeacherFromCourse(CourseName courseName, Teacher teacher) {
 
         for (Course course : courseList) {
-            if (Objects.equals(courseName.getString(), course.getName())) {
-                try {
-                    if (course.getTeacher().getName().equalsIgnoreCase(teacherToRemove)) {
-                        course.setTeacher(null);
-                        System.out.println(ANSI_RED + "Lärare " + teacherToRemove + " togs bort ifrån kursen " + courseName + "!\n");
-                        break;
-                    }
-                } catch (NullPointerException e) {
+            if (courseName.equals(course.getName())) {
+                if (course.getTeacher() != null) {
+                    course.setTeacher(null);
+                    System.out.println(ANSI_RED + "Lärare " + teacher.getName() + " togs bort ifrån kursen " + courseName + "!\n");
+                } else
                     System.out.println(ANSI_RED + "För tillfället undervisar ingen lärare kursen " + courseName);
-                }
+                break;
             }
         }
     }
