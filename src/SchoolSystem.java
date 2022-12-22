@@ -6,11 +6,9 @@ import java.util.Scanner;
 public class SchoolSystem {
     private Scanner userInput = new Scanner(System.in);
     private int id;
-    //StudentDao SD = new StudentDao();
-    //TeacherDao TD = new TeacherDao();
-    EmrollmentDao ED = new EmrollmentDao();
-    CourseDao CD = new CourseDao();
-    PersonDao PD = new PersonDao();
+    private EmrollmentDao ed = new EmrollmentDao();
+    private CourseDao cd = new CourseDao();
+    private PersonDao pd = new PersonDao();
 
     public SchoolSystem() {
 
@@ -56,8 +54,8 @@ public class SchoolSystem {
 
                 Skriv en siffra för att välja respektive kurs:
                 """);
-        for (int i = 0; i < CD.getCourseList().size(); i++) {
-            System.out.println("\"" + (i + 1) + "\" - " + CD.getCourseList().get(i).getName().getString());
+        for (int i = 0; i < cd.getCourseList().size(); i++) {
+            System.out.println("\"" + (i + 1) + "\" - " + cd.getCourseList().get(i).getName().getString());
         }
         System.out.println("\"9\" - Backa");
         System.out.println("\"0\" - Avsluta");
@@ -77,10 +75,10 @@ public class SchoolSystem {
     public void printCourseInformation(CourseName courseName) {
 
         if (id == Command.ADMIN.getValue()) {
-            System.out.println(ANSI_RESET + "** " + courseName + " **\nLärare: " + CD.getCourseTeacher(courseName) +
+            System.out.println(ANSI_RESET + "** " + courseName + " **\nLärare: " + cd.getCourseTeacher(courseName) +
             ANSI_RESET + "\nElever: ");
-            if (!ED.getEnrollmentSet().isEmpty()) {
-                for (Enrollment enrollment : ED.getEnrollmentSet()) {
+            if (!ed.getEnrollmentSet().isEmpty()) {
+                for (Enrollment enrollment : ed.getEnrollmentSet()) {
                     if (enrollment.getCourse().equals(courseName)) {
                         System.out.println(enrollment.getStudent());
                     }
@@ -124,10 +122,10 @@ public class SchoolSystem {
             System.out.println(ANSI_RESET + "Vilken elev vill du ta bort från kursen?");
 
             String studentToRemove = userInput.nextLine();
-            if (PD.getStudent(studentToRemove) == null)
+            if (pd.getStudent(studentToRemove) == null)
                 System.out.println("Kunde inte hitta en elev med namnet: '" + studentToRemove + "'.");
             else
-                ED.removeStudentFromCourse(studentToRemove, courseName);
+                ed.removeStudentFromCourse(studentToRemove, courseName);
             printCourseInformation(courseName);
 
         } else if (input == Command.ADD_STUDENT.getValue()) {
@@ -135,10 +133,10 @@ public class SchoolSystem {
             System.out.println(ANSI_RESET + "Vilken elev vill du lägga till kursen?");
 
             String studentToAdd = userInput.nextLine();
-            if (PD.getStudent(studentToAdd) == null)
+            if (pd.getStudent(studentToAdd) == null)
                 System.out.println("Kunde inte hitta en elev med namnet: '" + studentToAdd + "'.");
             else
-                ED.addStudentToCourse(PD.getStudent(studentToAdd), courseName, CD.getCourse(courseName));
+                ed.addStudentToCourse(pd.getStudent(studentToAdd), courseName, cd.getCourse(courseName));
             printCourseInformation(courseName);
 
         } else if (input == Command.REMOVE_TEACHER.getValue()) {
@@ -146,10 +144,10 @@ public class SchoolSystem {
             System.out.println("Vilken Lärare vill du ta bort från kursen?");
 
             String teacherToRemove = userInput.nextLine();
-            if (PD.getTeacher(teacherToRemove) == null)
+            if (pd.getTeacher(teacherToRemove) == null)
                 System.out.println("Kunde inte hitta en lärare med namnet: '" + teacherToRemove + "'.");
             else
-                CD.removeTeacherFromCourse(courseName, PD.getTeacher(teacherToRemove));
+                cd.removeTeacherFromCourse(courseName, pd.getTeacher(teacherToRemove));
             printCourseInformation(courseName);
 
         } else if (input == Command.ADD_TEACHER.getValue()) {
@@ -157,10 +155,10 @@ public class SchoolSystem {
             System.out.println("Vilken lärare vill du lägga till kursen?");
 
             String teacherToAdd = userInput.nextLine();
-            if (PD.getTeacher(teacherToAdd) == null)
+            if (pd.getTeacher(teacherToAdd) == null)
                 System.out.println("Kunde inte hitta en lärare med namnet: '" + teacherToAdd + "'.");
             else
-                CD.addTeacherToCourse(teacherToAdd, courseName, PD.getTeacher(teacherToAdd));
+                cd.addTeacherToCourse(teacherToAdd, courseName, pd.getTeacher(teacherToAdd));
             printCourseInformation(courseName);
 
         } else if (input == Command.BACK_OPTION.getValue()) {
@@ -172,7 +170,7 @@ public class SchoolSystem {
 
         System.out.println("** Lärarlista **\n");
         System.out.println("Skriv in ett" + ANSI_RED + " namn " + ANSI_RESET + "från listan för att se mer information\n");
-        for (Teacher teacher : PD.getTeacherList()) {
+        for (Teacher teacher : pd.getTeacherList()) {
             System.out.println(teacher.getName());
         }
         if (id == Command.ADMIN.getValue())
@@ -190,7 +188,7 @@ public class SchoolSystem {
             System.out.println("Skriv in namn, personnummer samt email på personen du vill lägga till");
             String[] data = userInput.nextLine().split(",");
             if (data.length == 3)
-                PD.addPerson(data, PersonType.TEACHER);
+                pd.addPerson(data, PersonType.TEACHER);
             else
                 System.out.println("Felaktig inmatning");
             printAllTeachers();
@@ -203,36 +201,44 @@ public class SchoolSystem {
 
         System.out.println("** Elevlista **\n");
         System.out.println("Skriv in ett" + ANSI_RED + " namn " + ANSI_RESET + "från listan för att se mer information\n");
-        for (Student student: PD.getStudentList()) {
+        for (Student student: pd.getStudentList()) {
             System.out.println(student.getName());
         }
-        System.out.println("\"9\" - Backa.");
-        System.out.println("\"0\" - Avsluta.");
+        if (id == Command.ADMIN.getValue())
+            System.out.println("1 - Lägg till ny elev.\n9 - Backa. \n0 - Avsluta.");
+        else
+            System.out.println("9 - Backa. \n0 - Avsluta.");
+
 
         String input = userInput.nextLine();
 
-        if (input.equals(Command.BACK_OPTION.getString())) {
-            if (id == Command.ADMIN.getValue()) {
-                printTerminal();
-            } else if (id == Command.STUDENT.getValue()) {
-                printTerminal();
-            }
-        } else if (input.equals(Command.EXIT.getString())) {
-            System.exit(0);
-        } else {
-            printStudentInformation(input);
+        if (input.equals(Command.BACK_OPTION.getString()))
+            printTerminal();
+        else if (input.equals(Command.ADD_NEW_PERSON.getString())) {
+            System.out.println("Skriv in namn, personnummer samt email på personen du vill lägga till");
+            String[] data = userInput.nextLine().split(",");
+            if (data.length == 3)
+                pd.addPerson(data, PersonType.STUDENT);
+            else
+                System.out.println("Felaktig inmatning");
+            printAllStudents();
         }
+        else if (input.equals(Command.EXIT.getString()))
+            System.exit(0);
+        else
+            printStudentInformation(input);
+
     }
 
     public void printStudentInformation(String studentName) {
 
-        Student student = PD.getStudent(studentName);
+        Student student = pd.getStudent(studentName);
 
         if (student != null) {
             System.out.println("*** Information om " + student.getName() + " ***\n" +
             "Namn: " + student.getName() + "\nID: " + student.getSSN() + "\nEmail: "+ student.getEmail() + "\nAktiva kurser:");
-            if (!ED.getEnrollmentSet().isEmpty()) {
-                for (Enrollment enrollment : ED.getEnrollmentSet()) {
+            if (!ed.getEnrollmentSet().isEmpty()) {
+                for (Enrollment enrollment : ed.getEnrollmentSet()) {
                     if (enrollment.getStudent().equals(student.getName()))
                         System.out.println(enrollment.getCourse());
                 }
@@ -251,14 +257,14 @@ public class SchoolSystem {
 
     public void printTeacherInformation(String teacherName) {
 
-        Teacher teacher = PD.getTeacher(teacherName);
+        Teacher teacher = pd.getTeacher(teacherName);
 
         if (teacher != null) {
             System.out.println("\nNamn: " + teacher.getName() + "\nID: " + teacher.getSSN() +
                     "\nEmail: " + teacher.getEmail() + "\nUndervisar i: ");
-            if (!PD.getTeacherList().isEmpty()) {
-                for (Course course : CD.getCourseList()) {
-                    if (course.getTeacher() == PD.getTeacher(teacherName))
+            if (!pd.getTeacherList().isEmpty()) {
+                for (Course course : cd.getCourseList()) {
+                    if (course.getTeacher() == pd.getTeacher(teacherName))
                         System.out.println(course.getName());
                 }
             }
