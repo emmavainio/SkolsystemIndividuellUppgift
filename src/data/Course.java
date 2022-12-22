@@ -1,3 +1,5 @@
+package data;
+
 import data.CourseName;
 import data.Teacher;
 

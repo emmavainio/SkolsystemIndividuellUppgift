@@ -10,6 +10,8 @@ public class SchoolSystem {
 
     StudentDao SD = new StudentDao();
     TeacherDao TD = new TeacherDao();
+    EmrollmentDao ED = new EmrollmentDao();
+    CourseDao CD = new CourseDao();
 
     public SchoolSystem() {
 
@@ -131,7 +133,10 @@ public class SchoolSystem {
             System.out.println(ANSI_RESET + "Vilken elev vill du lägga till kursen?");
 
             String studentToAdd = userInput.nextLine();
-            DAO.addStudentToCourse(studentToAdd, courseName);
+            if (SD.getStudent(studentToAdd) == null)
+                System.out.println("Kunde inte hitta en elev med namnet: '" + studentToAdd + "'.");
+            else
+                ED.addStudentToCourse(SD.getStudent(studentToAdd), courseName, CD.getCourse(courseName));
             printCourseInformation(courseName);
 
         } else if (input == Command.REMOVE_TEACHER.getValue()) {
@@ -208,7 +213,7 @@ public class SchoolSystem {
 
     public void printStudentInformation(String studentName) {
 
-        Student student = DAO.getStudent(studentName);
+        Student student = SD.getStudent(studentName);
 
         if (student != null) {
             System.out.println("*** Information om " + student.getName() + " ***\n" +
@@ -220,7 +225,7 @@ public class SchoolSystem {
                 }
             }
         } else
-            System.out.println("Finns ingen information om denna elev");
+            System.out.println("Denna person är inte en registrerad elev");
 
         System.out.println("\nVälj en siffra för att backa eller avsluta\n");
         System.out.println("\"9\" - Backa\n\"0\" - Avsluta");

@@ -17,7 +17,7 @@ public class StudentDao {
         try (BufferedReader buf = new BufferedReader(new FileReader(file))) {
             while ((temp = buf.readLine()) != null) {
                 String[] fileInput = temp.split(",");
-                var person = PersonFactory.createPerson(fileInput[0], fileInput[0], fileInput[1], fileInput[2]);
+                var person = PersonFactory.createPerson("STUDENT", fileInput[0], fileInput[1], fileInput[2]);
                 if (person instanceof Student) {
                     studentList.add((Student) person);
                 }
@@ -33,5 +33,14 @@ public class StudentDao {
 
     public void addStudent(Student student) {
         studentList.add(student);
+    }
+
+    public Student getStudent(String name) {
+        for (Student student : studentList) {
+            if (student.getName().equalsIgnoreCase(name)) {
+                return student;
+            }
+        }
+        return null;
     }
 }

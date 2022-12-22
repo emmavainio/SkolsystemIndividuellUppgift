@@ -1,8 +1,4 @@
-import data.Enrollment;
-import data.PersonFactory;
-import data.Student;
-import data.Teacher;
-import data.CourseName;
+import data.*;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -38,16 +34,6 @@ public class DataAccessObject {
         courseList.add(new Course(CourseName.MATH));
     }
 
-    public Student getStudent(String name) {
-        for (Student student : studentList) {
-            if (student.getName().equalsIgnoreCase(name)) {
-                return student;
-            }
-        }
-        System.out.println("Kunde inte hitta en elev med namnet: '" + name + "'.");
-        return null;
-    }
-
     public Course getCourse(CourseName courseName) {
         for (Course course : courseList) {
             if (course.getName().equals(courseName)) {
@@ -57,6 +43,8 @@ public class DataAccessObject {
         System.err.println("Det finns ingen kurs med namnet: '" + courseName + "'.");
         return null;
     }
+/*
+
 
     public Teacher getTeacher(String name) {
         for (Teacher teacher : teacherList) {
@@ -66,6 +54,8 @@ public class DataAccessObject {
         }
         return null;
     }
+    
+ */
 
     public void removeStudentFromCourse(String studentToRemove, CourseName courseName) {
 
@@ -95,27 +85,6 @@ public class DataAccessObject {
                 } catch (NullPointerException e) {
                     System.out.println(ANSI_RED + "För tillfället undervisar ingen lärare kursen " + courseName);
                 }
-            }
-        }
-    }
-
-    public void addStudentToCourse(String studentToAdd, CourseName courseName) {
-
-        if (getStudent(studentToAdd) == null) {
-            System.out.println(ANSI_RED + "Hittade ingen elev med namnet " + studentToAdd);
-        } else {
-            for (Enrollment enrollment : enrollmentSet) {
-                if (enrollment.getCourse().equals(courseName) && enrollment.getStudent().equalsIgnoreCase(studentToAdd)) {
-                    System.out.println(ANSI_RED + studentToAdd + " läser redan " + courseName + "!\n");
-                } else {
-                    enrollmentSet.add(new Enrollment(getStudent(studentToAdd).getName(), getCourse(courseName).getName()));
-                    System.out.println(ANSI_GREEN + studentToAdd + " lades till i kursen " + courseName + "!\n");
-                }
-                break;
-            }
-            if (enrollmentSet.isEmpty()) {
-                enrollmentSet.add(new Enrollment(getStudent(studentToAdd).getName(), getCourse(courseName).getName()));
-                System.out.println(ANSI_GREEN + studentToAdd + " lades till i kursen " + courseName + "!\n");
             }
         }
     }
